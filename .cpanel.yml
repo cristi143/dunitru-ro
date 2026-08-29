@@ -6,6 +6,10 @@
 #   repo clonat în: /home/marcelpa/repositories/dunitru-ro  (= PWD la deploy)
 #   document root dunitru.ro: /home/marcelpa/dunitru.ro/public_html
 #
+# Golirea păstrează .well-known, cgi-bin, .user.ini și php.ini — sunt fișierele
+# cPanel-ului. Mai ales .well-known: acolo pune AutoSSL dovada de validare a
+# domeniului, iar fără el nu se poate emite/reînnoi certificatul SSL.
+#
 # Site 100% static — nu există PHP, composer, bază de date. Deploy-ul înseamnă
 # strict: golește document root-ul și copiază acolo conținutul lui public/.
 #
@@ -22,8 +26,8 @@ deployment:
     - 'mkdir -p /home/marcelpa/dunitru.ro/public_html >> /home/marcelpa/deploy-dunitru.log 2>&1'
     - 'if [ -f /home/marcelpa/dunitru.ro/public_html/index.php ]; then echo "STOP: document root-ul conține index.php — pare a fi aplicația Laravel, nu dunitru.ro. Nu șterg nimic." >> /home/marcelpa/deploy-dunitru.log; exit 1; fi'
 
-    - 'echo "[2/4] golire document root (ca ștergerile din repo să se propage)" >> /home/marcelpa/deploy-dunitru.log'
-    - 'find /home/marcelpa/dunitru.ro/public_html -mindepth 1 -delete >> /home/marcelpa/deploy-dunitru.log 2>&1'
+    - 'echo "[2/4] golire document root (ca ștergerile din repo să se propage; păstrez fișierele proprii ale cPanel)" >> /home/marcelpa/deploy-dunitru.log'
+    - 'find /home/marcelpa/dunitru.ro/public_html -mindepth 1 -maxdepth 1 ! -name .well-known ! -name cgi-bin ! -name .user.ini ! -name php.ini -exec rm -rf {} + >> /home/marcelpa/deploy-dunitru.log 2>&1'
 
     - 'echo "[3/4] copiere public/ -> document root (inclusiv .htaccess)" >> /home/marcelpa/deploy-dunitru.log'
     - 'cp -a public/. /home/marcelpa/dunitru.ro/public_html/ >> /home/marcelpa/deploy-dunitru.log 2>&1'
