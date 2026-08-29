@@ -15,7 +15,7 @@ Sistemul e identic ca la `marcel-parcel.ro` (GitHub → cPanel Git Version Contr
 - **Cod sursă (sursa de adevăr):** GitHub `cristi143/dunitru-ro`.
 - **Producție:** ClausWeb (shared hosting), cPanel cu *Git™ Version Control*.
   - cont: `marcelpa` (dunitru.ro e **Addon Domain** în acest cont)
-  - document root dunitru.ro: `/home/marcelpa/dunitru.ro/`
+  - document root dunitru.ro: `/home/marcelpa/dunitru.ro/public_html/`
   - clona Git a serverului: `/home/marcelpa/repositories/dunitru-ro`
   - **fără** SSH shell pe server
 
@@ -41,7 +41,7 @@ Log-ul deploy-ului: `/home/marcelpa/deploy-dunitru.log` (vizibil din File Manage
 1. Verifică de siguranță că document root-ul **nu** conține `index.php`
    (protecție ca nu cumva să golească din greșeală `public_html/`, unde stă
    aplicația Laravel Marcel Parcel).
-2. Golește `/home/marcelpa/dunitru.ro/` — astfel ștergerile din repo se propagă.
+2. Golește `/home/marcelpa/dunitru.ro/public_html/` — astfel ștergerile din repo se propagă.
 3. Copiază tot conținutul lui `public/` acolo (inclusiv `.htaccess`).
 4. Scrie în log lista fișierelor publicate.
 
@@ -71,10 +71,13 @@ dunitru-ro/
 
 ## 5. Note importante
 
-- **`.htaccess` conține `RewriteEngine Off`.** Motivul: dacă document root-ul
-  dunitru.ro ajunge *sub* `public_html/` (ex. `public_html/dunitru.ro`), regulile
-  de rewrite ale Laravel-ului din `public_html/.htaccess` s-ar moșteni și ar
-  strica site-ul. Linia asta le neutralizează. Nu o șterge.
+- **Document root-ul e `/home/marcelpa/dunitru.ro/public_html`** — cPanel a creat
+  singur subfolderul `public_html` la adăugarea Addon Domain-ului. E un arbore
+  separat, *nu* e sub `public_html/`-ul contului (unde stă Laravel-ul Marcel), deci
+  cele două site-uri nu se influențează.
+- **`.htaccess` conține `RewriteEngine Off`** ca plasă de siguranță împotriva
+  moștenirii de reguli de rewrite din directoarele părinte. Site-ul fiind static,
+  nu are nevoie de rewrite. Nu o șterge.
 - **Dacă schimbi document root-ul** din cPanel, actualizează calea în `.cpanel.yml`
   (apare în mai multe linii) și în acest fișier.
 - **Domeniul e Addon Domain** în contul `marcelpa`. Cele două site-uri împart

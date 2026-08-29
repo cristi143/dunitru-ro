@@ -4,7 +4,7 @@
 # Mediu:
 #   user=marcelpa  home=/home/marcelpa   (dunitru.ro e Addon Domain în acest cont)
 #   repo clonat în: /home/marcelpa/repositories/dunitru-ro  (= PWD la deploy)
-#   document root dunitru.ro: /home/marcelpa/dunitru.ro
+#   document root dunitru.ro: /home/marcelpa/dunitru.ro/public_html
 #
 # Site 100% static — nu există PHP, composer, bază de date. Deploy-ul înseamnă
 # strict: golește document root-ul și copiază acolo conținutul lui public/.
@@ -19,16 +19,16 @@ deployment:
     - 'echo "=== DEPLOY dunitru.ro $(date) ===" > /home/marcelpa/deploy-dunitru.log'
 
     - 'echo "[1/4] verificare siguranță document root" >> /home/marcelpa/deploy-dunitru.log'
-    - 'mkdir -p /home/marcelpa/dunitru.ro >> /home/marcelpa/deploy-dunitru.log 2>&1'
-    - 'if [ -f /home/marcelpa/dunitru.ro/index.php ]; then echo "STOP: document root-ul conține index.php — pare a fi aplicația Laravel, nu dunitru.ro. Nu șterg nimic." >> /home/marcelpa/deploy-dunitru.log; exit 1; fi'
+    - 'mkdir -p /home/marcelpa/dunitru.ro/public_html >> /home/marcelpa/deploy-dunitru.log 2>&1'
+    - 'if [ -f /home/marcelpa/dunitru.ro/public_html/index.php ]; then echo "STOP: document root-ul conține index.php — pare a fi aplicația Laravel, nu dunitru.ro. Nu șterg nimic." >> /home/marcelpa/deploy-dunitru.log; exit 1; fi'
 
     - 'echo "[2/4] golire document root (ca ștergerile din repo să se propage)" >> /home/marcelpa/deploy-dunitru.log'
-    - 'find /home/marcelpa/dunitru.ro -mindepth 1 -delete >> /home/marcelpa/deploy-dunitru.log 2>&1'
+    - 'find /home/marcelpa/dunitru.ro/public_html -mindepth 1 -delete >> /home/marcelpa/deploy-dunitru.log 2>&1'
 
     - 'echo "[3/4] copiere public/ -> document root (inclusiv .htaccess)" >> /home/marcelpa/deploy-dunitru.log'
-    - 'cp -a public/. /home/marcelpa/dunitru.ro/ >> /home/marcelpa/deploy-dunitru.log 2>&1'
+    - 'cp -a public/. /home/marcelpa/dunitru.ro/public_html/ >> /home/marcelpa/deploy-dunitru.log 2>&1'
 
     - 'echo "[4/4] conținutul publicat:" >> /home/marcelpa/deploy-dunitru.log'
-    - 'ls -la /home/marcelpa/dunitru.ro >> /home/marcelpa/deploy-dunitru.log 2>&1'
+    - 'ls -la /home/marcelpa/dunitru.ro/public_html >> /home/marcelpa/deploy-dunitru.log 2>&1'
 
     - 'echo "=== DEPLOY DONE $(date) ===" >> /home/marcelpa/deploy-dunitru.log'
