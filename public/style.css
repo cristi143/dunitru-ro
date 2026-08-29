@@ -64,25 +64,9 @@ h1 {
 }
 
 .sub {
-  margin: 0 0 2rem;
+  margin: 0;
   color: var(--muted);
   font-size: 0.9375rem;
-}
-
-.contact {
-  display: inline-block;
-  padding: 0.6rem 1.1rem;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  color: var(--accent);
-  font-size: 0.9375rem;
-  text-decoration: none;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
-}
-
-.contact:hover {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
 }
 
 footer {
