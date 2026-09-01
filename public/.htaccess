@@ -5,7 +5,19 @@
 # public_html/.htaccess s-ar moșteni aici și ar strica site-ul.
 # Linia de mai jos le neutralizează. E inofensivă și dacă document root-ul
 # e în afara lui public_html.
-RewriteEngine Off
+# Forțează https.
+#
+# Comutatorul „Force HTTPS Redirect" din cPanel nu e disponibil pe acest pachet
+# de găzduire — dă „You do not have the feature sslinstall". Certificatul
+# Let's Encrypt există însă, deci facem redirecționarea noi.
+#
+# A doua condiție e pentru cazul în care TLS-ul se termină într-un proxy din
+# fața serverului: acolo %{HTTPS} poate fi „off" deși vizitatorul e pe https,
+# iar fără verificarea antetului s-ar face o buclă infinită de redirecționări.
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 DirectoryIndex index.html
 
